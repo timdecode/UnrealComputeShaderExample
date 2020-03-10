@@ -6,6 +6,17 @@
 #include "Components/ActorComponent.h"
 #include "MyClass.generated.h"
 
+#include "GlobalShader.h"
+#include "UniformBuffer.h"
+#include "RHICommandList.h"
+
+BEGIN_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidPosition, )
+SHADER_PARAMETER(FVector3, position)
+END_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidPosition)
+
+BEGIN_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidVelocity, )
+SHADER_PARAMETER(FVector3, velocity)
+END_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidVelocity)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALGPUBOIDS_API UComputeShaderBoidsComponent : public UActorComponent
