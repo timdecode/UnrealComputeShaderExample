@@ -4,19 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "MyClass.generated.h"
 
 #include "GlobalShader.h"
 #include "UniformBuffer.h"
 #include "RHICommandList.h"
 
+#include "MyClass.generated.h"
+
 BEGIN_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidPosition, )
-SHADER_PARAMETER(FVector3, position)
-END_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidPosition)
+SHADER_PARAMETER(FVector, position)
+END_GLOBAL_SHADER_PARAMETER_STRUCT()
 
 BEGIN_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidVelocity, )
-SHADER_PARAMETER(FVector3, velocity)
-END_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidVelocity)
+SHADER_PARAMETER(FVector, velocity)
+END_GLOBAL_SHADER_PARAMETER_STRUCT()
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALGPUBOIDS_API UComputeShaderBoidsComponent : public UActorComponent
@@ -25,7 +26,7 @@ class UNREALGPUBOIDS_API UComputeShaderBoidsComponent : public UActorComponent
 
 public:	
 	// Sets default values for this component's properties
-	UMyClass();
+	UComputeShaderBoidsComponent();
 
 protected:
 	// Called when the game starts
