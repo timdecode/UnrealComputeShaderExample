@@ -4,13 +4,38 @@
 	"Category": "",
 	"Description": "",
 	"Modules": [
-        {
-            "Name": "UnrealGPUBoids",
-            "Type": "Runtime",
-            "LoadingPhase": "PostConfigInit",
-            "AdditionalDependencies": [
-                "Engine"
-            ]
-        }
+		{
+			"Name": "UnrealGPUBoids",
+			"Type": "Runtime",
+			"LoadingPhase": "PostConfigInit",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "SteamVR",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win32",
+				"Win64",
+				"Linux",
+				"Mac"
+			]
+		},
+		{
+			"Name": "OculusVR",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win32",
+				"Win64",
+				"Android"
+			]
+		},
+		{
+			"Name": "Paper2D",
+			"Enabled": false
+		}
 	]
 }

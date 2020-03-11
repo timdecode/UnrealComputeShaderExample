@@ -14,7 +14,7 @@
 
 
 // Sets default values for this component's properties
-UComputeShaderBoidsComponent::UComputeShaderBoidsComponent()
+UComputeShaderBoidsComponent::UComputeShaderBoidsComponent() 
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -58,14 +58,14 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
 	[&](FRHICommandListImmediate& RHICommands)
 	{
-		TShaderMapRef<FComputeShaderDeclaration> computeShader(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
+		//TShaderMapRef<FComputeShaderDeclaration> computeShader(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
 
-		FRHIComputeShader * rhiComputeShader = computeShader->GetComputeShader();
+		FRHIComputeShader * rhiComputeShader = computeShader()->GetComputeShader();
 
-		if (computeShader->positions.IsBound())
-			RHICommands.SetUAVParameter(rhiComputeShader, computeShader->positions.GetBaseIndex(), _positionBufferUAV);
+		if (computeShader()->positions.IsBound())
+			RHICommands.SetUAVParameter(rhiComputeShader, computeShader()->positions.GetBaseIndex(), _positionBufferUAV);
 
-		DispatchComputeShader(RHICommands, *computeShader, 64, 1, 1);
+		DispatchComputeShader(RHICommands, *computeShader(), 64, 1, 1);
 	});
 }
 

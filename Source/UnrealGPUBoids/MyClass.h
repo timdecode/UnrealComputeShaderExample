@@ -53,7 +53,7 @@ class UNREALGPUBOIDS_API UComputeShaderBoidsComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UComputeShaderBoidsComponent();
 
@@ -61,20 +61,28 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-    UPROPERTY() int numBoids = 1000;
-    
-protected:
-    // CPU side
-    TResourceArray<FVector> positionResourceArray;
-    
-    // GPU side
-    FStructuredBufferRHIRef _positionBuffer;
-    FUnorderedAccessViewRHIRef _positionBufferUAV;     // we need a UAV for writing
+	UPROPERTY() int numBoids = 1000;
 
-    
+protected:
+	// CPU side
+	TResourceArray<FVector> positionResourceArray;
+
+	// GPU side
+	FStructuredBufferRHIRef _positionBuffer;
+	FUnorderedAccessViewRHIRef _positionBufferUAV;     // we need a UAV for writing
+
+	TUniquePtr< TShaderMapRef<FComputeShaderDeclaration> > _computeShader;
+
+	TShaderMapRef<FComputeShaderDeclaration>& computeShader()
+	{
+		if (!_computeShader)
+			_computeShader = MakeUnique< TShaderMapRef<FComputeShaderDeclaration> >(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
+
+		return *_computeShader.Get();
+	}
 };
