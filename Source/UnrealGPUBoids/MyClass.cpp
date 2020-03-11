@@ -43,23 +43,21 @@ void UComputeShaderBoidsComponent::BeginPlay()
     _positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess | BUF_ShaderResource, createInfo);
 	_positionBufferUAV = RHICreateUnorderedAccessView(_positionBuffer, false, false);
 
-	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
-	[&](FRHICommandListImmediate& RHICommands)
-	{
-		//TShaderMapRef<FComputeShaderDeclaration> computeShader(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
 
-		FRHIComputeShader * rhiComputeShader = computeShader()->GetComputeShader();
-
-		if (computeShader()->positions.IsBound())
-			RHICommands.SetUAVParameter(rhiComputeShader, computeShader()->positions.GetBaseIndex(), _positionBufferUAV);
-	});
 }
 
 void UComputeShaderBoidsComponent::_hack(FRHICommandListImmediate& RHICommands)
 {
-	float test = 1.0f;
+	TShaderMapRef<FComputeShaderDeclaration> cs(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
 
-	DispatchComputeShader(RHICommands, *computeShader(), 64, 1, 1);
+	FRHIComputeShader * rhiComputeShader = cs->GetComputeShader();
+
+	if (cs->positions.IsBound())
+		RHICommands.SetUAVParameter(rhiComputeShader, cs->positions.GetBaseIndex(), _positionBufferUAV);
+
+	RHICommands.SetComputeShader(rhiComputeShader);
+
+	DispatchComputeShader(RHICommands, *cs, 64, 1, 1);
 }
 
 
