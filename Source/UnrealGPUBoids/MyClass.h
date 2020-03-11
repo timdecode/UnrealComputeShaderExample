@@ -19,6 +19,33 @@ BEGIN_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidVelocity, )
 SHADER_PARAMETER(FVector, velocity)
 END_GLOBAL_SHADER_PARAMETER_STRUCT()
 
+class FComputeShaderDeclaration : public FGlobalShader
+{
+	DECLARE_SHADER_TYPE(FComputeShaderDeclaration, Global);
+
+	FComputeShaderDeclaration() {}
+
+	explicit FComputeShaderDeclaration(const ShaderMetaType::CompiledShaderInitializerType& Initializer);
+
+	static bool ShouldCompilePermutation(const FGlobalShaderPermutationParameters& Parameters) {
+		return GetMaxSupportedFeatureLevel(Parameters.Platform) >= ERHIFeatureLevel::SM5;
+	};
+
+	static void ModifyCompilationEnvironment(const FGlobalShaderPermutationParameters& Parameters, FShaderCompilerEnvironment& OutEnvironment);
+
+	virtual bool Serialize(FArchive& Ar) override
+	{
+		bool bShaderHasOutdatedParams = FGlobalShader::Serialize(Ar);
+
+		Ar << positionBuffer;
+
+		return bShaderHasOutdatedParams;
+	}
+
+public:
+	FShaderResourceParameter positions;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALGPUBOIDS_API UComputeShaderBoidsComponent : public UActorComponent
 {

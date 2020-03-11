@@ -5,7 +5,7 @@
 
 // Some useful links
 // -----------------
-// [Enque render commands using lambdas](https://github.com/EpicGames/UnrealEngine/commit/41f6b93892dcf626a5acc155f7d71c756a5624b0)
+// [Enqueue render commands using lambdas](https://github.com/EpicGames/UnrealEngine/commit/41f6b93892dcf626a5acc155f7d71c756a5624b0)
 //
 
 // Sets default values for this component's properties
@@ -36,7 +36,7 @@ void UComputeShaderBoidsComponent::BeginPlay()
     
     
     _positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess | BUF_ShaderResource, createInfo);
-    
+	_positionBufferUAV = RHICreateUnorderedAccessView(_positionBuffer, false, false);
 }
 
 
@@ -45,6 +45,32 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	//FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
+
+
+
+
+	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
+	[&](FRHICommandListImmediate& RHICommands)
+	{
+		TShaderMapRef<FComputeShaderDeclaration> computeShader(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
+
+		FComputeShaderRHIParamRef computeShaderParamRef = computeShader->GetComputeShader();
+
+		if (computeShader->positions.IsBound())
+			RHICommands.SetUAVParameter(computeShaderParamRef, computeShader->positions.GetBaseIndex(), _positionBufferUAV);
+
+		DispatchComputeShader(RHICommands, *computeShader, 64, 1, 1);
+	});
 }
 
+FComputeShaderDeclaration::FComputeShaderDeclaration(const ShaderMetaType::CompiledShaderInitializerType& Initializer) : FGlobalShader(Initializer)
+{
+	positions.Bind(Initializer.ParameterMap, TEXT("positions"));
+}
+
+void FComputeShaderDeclaration::ModifyCompilationEnvironment(const FGlobalShaderPermutationParameters& Parameters, FShaderCompilerEnvironment& OutEnvironment)
+{
+	FGlobalShader::ModifyCompilationEnvironment(Parameters, OutEnvironment);
+	OutEnvironment.CompilerFlags.Add(CFLAG_StandardOptimization);
+}
