@@ -3,4 +3,4 @@
 #include "UnrealGPUBoids.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, UnrealGPUBoids, "UnrealGPUBoids" );
+IMPLEMENT_PRIMARY_GAME_MODULE(FGPUBoids, UnrealGPUBoids, "UnrealGPUBoids");

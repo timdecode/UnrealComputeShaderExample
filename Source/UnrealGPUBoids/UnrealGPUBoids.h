@@ -4,3 +4,10 @@
 
 #include "CoreMinimal.h"
 
+class FGPUBoids : public IModuleInterface
+{
+	void StartupModule() override {
+		FString ShaderDirectory = FPaths::Combine(FPaths::ProjectPluginsDir(), TEXT("UnrealGPUBoids/Shaders"));
+		AddShaderSourceDirectoryMapping("/ComputeShaderPlugin", ShaderDirectory);
+	}
+};

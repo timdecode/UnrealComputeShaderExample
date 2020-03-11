@@ -11,13 +11,7 @@
 
 #include "MyClass.generated.h"
 
-class FGPUBoids : public IModuleInterface
-{
-	void StartupModule() override {
-		FString ShaderDirectory = FPaths::Combine(FPaths::ProjectPluginsDir(), TEXT("UnrealGPUBoids/Shaders"));
-		AddShaderSourceDirectoryMapping("/ComputeShaderPlugin", ShaderDirectory);
-	}
-};
+
 
 BEGIN_GLOBAL_SHADER_PARAMETER_STRUCT(FBoidPosition, )
 SHADER_PARAMETER(FVector, position)
@@ -45,7 +39,7 @@ class FComputeShaderDeclaration : public FGlobalShader
 	{
 		bool bShaderHasOutdatedParams = FGlobalShader::Serialize(Ar);
 
-		Ar << positionBuffer;
+		Ar << positions;
 
 		return bShaderHasOutdatedParams;
 	}

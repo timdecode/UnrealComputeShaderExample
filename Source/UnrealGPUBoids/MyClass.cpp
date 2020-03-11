@@ -3,6 +3,9 @@
 
 #include "MyClass.h"
 
+#include "ShaderParameterUtils.h"
+#include "RHIStaticStates.h"
+
 // Some useful links
 // -----------------
 // [Enqueue render commands using lambdas](https://github.com/EpicGames/UnrealEngine/commit/41f6b93892dcf626a5acc155f7d71c756a5624b0)
@@ -57,10 +60,10 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	{
 		TShaderMapRef<FComputeShaderDeclaration> computeShader(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
 
-		FComputeShaderRHIParamRef computeShaderParamRef = computeShader->GetComputeShader();
+		FRHIComputeShader * rhiComputeShader = computeShader->GetComputeShader();
 
 		if (computeShader->positions.IsBound())
-			RHICommands.SetUAVParameter(computeShaderParamRef, computeShader->positions.GetBaseIndex(), _positionBufferUAV);
+			RHICommands.SetUAVParameter(rhiComputeShader, computeShader->positions.GetBaseIndex(), _positionBufferUAV);
 
 		DispatchComputeShader(RHICommands, *computeShader, 64, 1, 1);
 	});
@@ -81,4 +84,3 @@ void FComputeShaderDeclaration::ModifyCompilationEnvironment(const FGlobalShader
 
 
 IMPLEMENT_SHADER_TYPE(, FComputeShaderDeclaration, TEXT("/ComputeShaderPlugin/BitonicSortingKernelComputeShader.usf"), TEXT("MainComputeShader"), SF_Compute);
-IMPLEMENT_MODULE(FGPUBoids, UnrealGPUBoids)
