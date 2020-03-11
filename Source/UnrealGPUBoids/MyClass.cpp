@@ -8,6 +8,8 @@
 // [Enqueue render commands using lambdas](https://github.com/EpicGames/UnrealEngine/commit/41f6b93892dcf626a5acc155f7d71c756a5624b0)
 //
 
+
+
 // Sets default values for this component's properties
 UComputeShaderBoidsComponent::UComputeShaderBoidsComponent()
 {
@@ -74,3 +76,9 @@ void FComputeShaderDeclaration::ModifyCompilationEnvironment(const FGlobalShader
 	FGlobalShader::ModifyCompilationEnvironment(Parameters, OutEnvironment);
 	OutEnvironment.CompilerFlags.Add(CFLAG_StandardOptimization);
 }
+
+
+
+
+IMPLEMENT_SHADER_TYPE(, FComputeShaderDeclaration, TEXT("/ComputeShaderPlugin/BitonicSortingKernelComputeShader.usf"), TEXT("MainComputeShader"), SF_Compute);
+IMPLEMENT_MODULE(FGPUBoids, UnrealGPUBoids)
