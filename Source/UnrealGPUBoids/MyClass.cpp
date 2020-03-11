@@ -42,18 +42,6 @@ void UComputeShaderBoidsComponent::BeginPlay()
     
     _positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess | BUF_ShaderResource, createInfo);
 	_positionBufferUAV = RHICreateUnorderedAccessView(_positionBuffer, false, false);
-}
-
-
-// Called every frame
-void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	//FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
-
-
-
 
 	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
 	[&](FRHICommandListImmediate& RHICommands)
@@ -64,8 +52,34 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 		if (computeShader()->positions.IsBound())
 			RHICommands.SetUAVParameter(rhiComputeShader, computeShader()->positions.GetBaseIndex(), _positionBufferUAV);
+	});
+}
 
-		DispatchComputeShader(RHICommands, *computeShader(), 64, 1, 1);
+void UComputeShaderBoidsComponent::_hack(FRHICommandListImmediate& RHICommands)
+{
+	float test = 1.0f;
+
+	DispatchComputeShader(RHICommands, *computeShader(), 64, 1, 1);
+}
+
+
+// Called every frame
+void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	//FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
+
+	if (_dispatched) return;
+
+	_dispatched = true;
+
+	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
+	[&](FRHICommandListImmediate& RHICommands)
+	{
+		_hack(RHICommands);
+
+		_dispatched = false;
 	});
 }
 

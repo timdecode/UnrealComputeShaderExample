@@ -9,6 +9,8 @@
 #include "UniformBuffer.h"
 #include "RHICommandList.h"
 
+#include <atomic>
+
 #include "MyClass.generated.h"
 
 
@@ -61,6 +63,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void _hack(FRHICommandListImmediate& RHICommands);
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -77,7 +80,6 @@ protected:
 	FUnorderedAccessViewRHIRef _positionBufferUAV;     // we need a UAV for writing
 
 	TUniquePtr< TShaderMapRef<FComputeShaderDeclaration> > _computeShader;
-
 	TShaderMapRef<FComputeShaderDeclaration>& computeShader()
 	{
 		if (!_computeShader)
@@ -85,4 +87,6 @@ protected:
 
 		return *_computeShader.Get();
 	}
+
+	std::atomic<bool> _dispatched = false;
 };
