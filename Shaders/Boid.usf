@@ -20,7 +20,7 @@
 //--------------------------------------------------------------------------------------
 // Buffers
 //--------------------------------------------------------------------------------------
-RWStructuredBuffer<float3> positions : register(u1);         // Point Positions Input Buffer
+RWStructuredBuffer<float3> positions;         // Point Positions Input Buffer
 
 
 [numthreads(TRANSPOSE_BLOCK_SIZE, TRANSPOSE_BLOCK_SIZE, 1)]
@@ -29,9 +29,11 @@ void MainComputeShader(uint3 Gid : SV_GroupID,
                      uint3 GTid : SV_GroupThreadID,
                      uint GI : SV_GroupIndex)
 {
-    float3 position = positions[DTid.x];
+    float3 position = positions[GTid.x];
     
 	position.z += 0.01f;
 
-	positions[TDid.x] = position;
+	GroupMemoryBarrierWithGroupSync();
+
+	positions[GTid.x] = position;
 }

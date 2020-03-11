@@ -83,4 +83,4 @@ void FComputeShaderDeclaration::ModifyCompilationEnvironment(const FGlobalShader
 
 
 
-IMPLEMENT_SHADER_TYPE(, FComputeShaderDeclaration, TEXT("/ComputeShaderPlugin/BitonicSortingKernelComputeShader.usf"), TEXT("MainComputeShader"), SF_Compute);
+IMPLEMENT_SHADER_TYPE(, FComputeShaderDeclaration, TEXT("/ComputeShaderPlugin/Boid.usf"), TEXT("MainComputeShader"), SF_Compute);

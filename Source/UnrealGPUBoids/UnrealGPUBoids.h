@@ -6,8 +6,13 @@
 
 class FGPUBoids : public IModuleInterface
 {
+	virtual bool IsGameModule() const override
+	{
+		return true;
+	}
+
 	void StartupModule() override {
-		FString ShaderDirectory = FPaths::Combine(FPaths::ProjectPluginsDir(), TEXT("UnrealGPUBoids/Shaders"));
+		FString ShaderDirectory = FPaths::Combine(FPaths::ProjectDir(), TEXT("Shaders"));
 		AddShaderSourceDirectoryMapping("/ComputeShaderPlugin", ShaderDirectory);
 	}
 };
