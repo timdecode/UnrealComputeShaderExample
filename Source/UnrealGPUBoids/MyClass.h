@@ -36,5 +36,12 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+public:
+    UPROPERTY() int numBoids = 1000;
+    
+protected:
+    FStructuredBufferRHIRef _positionBuffer;
+    
+    // we need a UAV for writing
+    FUnorderedAccessViewRHIRef _positionBufferUAV;
 };

@@ -20,7 +20,12 @@ void UComputeShaderBoidsComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+    FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
+    
+    FRHIResourceCreateInfo createInfo;
+
+    _positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess, createInfo);
+    
 }
 
 
