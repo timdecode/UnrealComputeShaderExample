@@ -46,38 +46,24 @@ void UComputeShaderBoidsComponent::BeginPlay()
 
 }
 
-void UComputeShaderBoidsComponent::_hack(FRHICommandListImmediate& RHICommands)
-{
-	TShaderMapRef<FComputeShaderDeclaration> cs(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
-
-	FRHIComputeShader * rhiComputeShader = cs->GetComputeShader();
-
-	if (cs->positions.IsBound())
-		RHICommands.SetUAVParameter(rhiComputeShader, cs->positions.GetBaseIndex(), _positionBufferUAV);
-
-	RHICommands.SetComputeShader(rhiComputeShader);
-
-	DispatchComputeShader(RHICommands, *cs, 64, 1, 1);
-}
-
-
 // Called every frame
 void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	//FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
-
-	if (_dispatched) return;
-
-	_dispatched = true;
-
 	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
 	[&](FRHICommandListImmediate& RHICommands)
 	{
-		_hack(RHICommands);
+		TShaderMapRef<FComputeShaderDeclaration> cs(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
 
-		_dispatched = false;
+		FRHIComputeShader * rhiComputeShader = cs->GetComputeShader();
+
+		if (cs->positions.IsBound())
+			RHICommands.SetUAVParameter(rhiComputeShader, cs->positions.GetBaseIndex(), _positionBufferUAV);
+
+		RHICommands.SetComputeShader(rhiComputeShader);
+
+		DispatchComputeShader(RHICommands, *cs, 64, 1, 1);
 	});
 }
 
@@ -91,8 +77,5 @@ void FComputeShaderDeclaration::ModifyCompilationEnvironment(const FGlobalShader
 	FGlobalShader::ModifyCompilationEnvironment(Parameters, OutEnvironment);
 	OutEnvironment.CompilerFlags.Add(CFLAG_StandardOptimization);
 }
-
-
-
 
 IMPLEMENT_SHADER_TYPE(, FComputeShaderDeclaration, TEXT("/ComputeShaderPlugin/Boid.usf"), TEXT("MainComputeShader"), SF_Compute);
