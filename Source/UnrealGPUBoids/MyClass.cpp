@@ -28,8 +28,14 @@ void UComputeShaderBoidsComponent::BeginPlay()
     FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
     
     FRHIResourceCreateInfo createInfo;
-
-    _positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess, createInfo);
+    
+    positionResourceArray.Init(FVector::ZeroVector, numBoids);
+    
+    
+    createInfo.ResourceArray = &positionResourceArray;
+    
+    
+    _positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess | BUF_ShaderResource, createInfo);
     
 }
 

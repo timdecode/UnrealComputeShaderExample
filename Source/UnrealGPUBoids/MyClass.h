@@ -40,8 +40,12 @@ public:
     UPROPERTY() int numBoids = 1000;
     
 protected:
-    FStructuredBufferRHIRef _positionBuffer;
+    // CPU side
+    TResourceArray<FVector> positionResourceArray;
     
-    // we need a UAV for writing
-    FUnorderedAccessViewRHIRef _positionBufferUAV;
+    // GPU side
+    FStructuredBufferRHIRef _positionBuffer;
+    FUnorderedAccessViewRHIRef _positionBufferUAV;     // we need a UAV for writing
+
+    
 };
