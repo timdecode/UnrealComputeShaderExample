@@ -69,18 +69,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-protected:
-	void _initISMC();
-	void _updateInstanceTransforms();
+
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int numBoids = 1000;
 
-protected:
-	TArray<FVector> _outputPositions;
-	TArray<FTransform> _instanceTransforms;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FVector> outputPositions;
 
 protected:
 	// GPU side
@@ -89,16 +85,4 @@ protected:
 
 	FStructuredBufferRHIRef _timesBuffer;
 	FUnorderedAccessViewRHIRef _timesBufferUAV;
-
-
-	TUniquePtr< TShaderMapRef<FComputeShaderDeclaration> > _computeShader;
-	TShaderMapRef<FComputeShaderDeclaration>& computeShader()
-	{
-		if (!_computeShader)
-			_computeShader = MakeUnique< TShaderMapRef<FComputeShaderDeclaration> >(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
-
-		return *_computeShader.Get();
-	}
-
-	std::atomic<bool> _dispatched = false;
 };
