@@ -51,6 +51,10 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	_outputPositions.SetNum(numBoids);
+
+	_updateInstanceTransforms();
+
 	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
 	[&](FRHICommandListImmediate& RHICommands)
 	{
@@ -64,7 +68,43 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 		RHICommands.SetComputeShader(rhiComputeShader);
 
 		DispatchComputeShader(RHICommands, *cs, 64, 1, 1);
+
+		// read back the data
+		uint8* data = (uint8*)RHILockStructuredBuffer(_positionBuffer, 0, numBoids * sizeof(FVector), RLM_ReadOnly);
+		FMemory::Memcpy(_outputPositions.GetData(), data, numBoids * sizeof(FVector));		
+
+		RHIUnlockStructuredBuffer(_positionBuffer);
 	});
+}
+
+void UComputeShaderBoidsComponent::_updateInstanceTransforms()
+{
+	UInstancedStaticMeshComponent * ismc = GetOwner()->FindComponentByClass<UInstancedStaticMeshComponent>();
+
+	if (!ismc) return;
+
+	ismc->SetSimulatePhysics(false);
+
+	// resize up/down the ismc
+	int toAdd = FMath::Max(0, numBoids - ismc->GetInstanceCount());
+	int toRemove = FMath::Max(0, ismc->GetInstanceCount() - numBoids);
+
+	for (int i = 0; i < toAdd; ++i)
+		ismc->AddInstance(FTransform::Identity);
+	for (int i = 0; i < toRemove; ++i)
+		ismc->RemoveInstance(ismc->GetInstanceCount() - 1);
+	
+	// update the transforms
+	_instanceTransforms.SetNum(_outputPositions.Num());
+
+	for (int i = 0; i < _outputPositions.Num(); ++i)
+	{
+		FTransform& transform = _instanceTransforms[i];
+
+		transform.SetTranslation(_outputPositions[i]);
+	}
+
+	ismc->BatchUpdateInstancesTransforms(0, _instanceTransforms, false, true, true);
 }
 
 FComputeShaderDeclaration::FComputeShaderDeclaration(const ShaderMetaType::CompiledShaderInitializerType& Initializer) : FGlobalShader(Initializer)

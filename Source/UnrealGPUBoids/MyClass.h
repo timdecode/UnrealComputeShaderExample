@@ -67,8 +67,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+protected:
+	void _updateInstanceTransforms();
+
 public:
-	UPROPERTY() int numBoids = 1000;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int numBoids = 1000;
+
+protected:
+	TArray<FVector> _outputPositions;
+	TArray<FTransform> _instanceTransforms;
 
 protected:
 	// CPU side
