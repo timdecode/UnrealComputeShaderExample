@@ -8,13 +8,10 @@
 RWStructuredBuffer<float3> positions;         // Point Positions Input Buffer
 RWStructuredBuffer<float> times;
 
-[numthreads(64, 1, 1)]
-void MainComputeShader(uint3 Gid : SV_GroupID,
-                     uint3 DTid : SV_DispatchThreadID,
-                     uint3 GTid : SV_GroupThreadID,
-                     uint GI : SV_GroupIndex)
+[numthreads(256, 1, 1)]
+void MainComputeShader(uint3 ThreadId : SV_DispatchThreadID)
 {
-    int index = DTid.x;
+    int index = ThreadId.x;
 
     float3 position = positions[index];
     

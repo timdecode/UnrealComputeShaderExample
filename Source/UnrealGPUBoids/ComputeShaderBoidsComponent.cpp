@@ -87,7 +87,7 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 		RHICommands.SetComputeShader(rhiComputeShader);
 
-		DispatchComputeShader(RHICommands, *cs, 64, 1, 1);
+		DispatchComputeShader(RHICommands, *cs, 256, 1, 1);
 
 		// read back the data
 		uint8* data = (uint8*)RHILockStructuredBuffer(_positionBuffer, 0, numBoids * sizeof(FVector), RLM_ReadOnly);
