@@ -68,6 +68,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
+	void _initISMC();
 	void _updateInstanceTransforms();
 
 public:

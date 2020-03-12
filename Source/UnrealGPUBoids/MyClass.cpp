@@ -29,21 +29,17 @@ void UComputeShaderBoidsComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
     FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
-    
-    FRHIResourceCreateInfo createInfo;
     
     positionResourceArray.Init(FVector::ZeroVector, numBoids);
     
-    
+	FRHIResourceCreateInfo createInfo;
     createInfo.ResourceArray = &positionResourceArray;
-    
     
     _positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess | BUF_ShaderResource, createInfo);
 	_positionBufferUAV = RHICreateUnorderedAccessView(_positionBuffer, false, false);
 
-
+	_initISMC();
 }
 
 // Called every frame
@@ -77,13 +73,26 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	});
 }
 
-void UComputeShaderBoidsComponent::_updateInstanceTransforms()
+void UComputeShaderBoidsComponent::_initISMC()
 {
 	UInstancedStaticMeshComponent * ismc = GetOwner()->FindComponentByClass<UInstancedStaticMeshComponent>();
 
 	if (!ismc) return;
 
 	ismc->SetSimulatePhysics(false);
+
+	ismc->SetMobility(EComponentMobility::Movable);
+	ismc->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//ismc->UseDynamicInstanceBuffer = true;
+	//ismc->KeepInstanceBufferCPUAccess = true;
+	ismc->SetCollisionProfileName(TEXT("NoCollision"));
+}
+
+void UComputeShaderBoidsComponent::_updateInstanceTransforms()
+{
+	UInstancedStaticMeshComponent * ismc = GetOwner()->FindComponentByClass<UInstancedStaticMeshComponent>();
+
+	if (!ismc) return;
 
 	// resize up/down the ismc
 	int toAdd = FMath::Max(0, numBoids - ismc->GetInstanceCount());
@@ -102,9 +111,13 @@ void UComputeShaderBoidsComponent::_updateInstanceTransforms()
 		FTransform& transform = _instanceTransforms[i];
 
 		transform.SetTranslation(_outputPositions[i]);
+		transform.SetScale3D(FVector(1.0f));
+		transform.SetRotation(FQuat::Identity);
 	}
 
 	ismc->BatchUpdateInstancesTransforms(0, _instanceTransforms, false, true, true);
+
+	ismc->UpdateBounds();
 }
 
 FComputeShaderDeclaration::FComputeShaderDeclaration(const ShaderMetaType::CompiledShaderInitializerType& Initializer) : FGlobalShader(Initializer)
