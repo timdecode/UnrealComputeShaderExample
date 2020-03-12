@@ -11,7 +11,7 @@
 
 #include <atomic>
 
-#include "MyClass.generated.h"
+#include "ComputeShaderBoidsComponent.generated.h"
 
 
 

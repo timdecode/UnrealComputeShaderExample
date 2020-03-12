@@ -3,7 +3,7 @@
 
 #include "DrawPositionsComponent.h"
 
-#include "MyClass.h"
+#include "ComputeShaderBoidsComponent.h"
 
 // Sets default values for this component's properties
 UDrawPositionsComponent::UDrawPositionsComponent()
