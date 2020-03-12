@@ -42,12 +42,14 @@ class FComputeShaderDeclaration : public FGlobalShader
 		bool bShaderHasOutdatedParams = FGlobalShader::Serialize(Ar);
 
 		Ar << positions;
+		Ar << times;
 
 		return bShaderHasOutdatedParams;
 	}
 
 public:
 	FShaderResourceParameter positions;
+	FShaderResourceParameter times;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -79,13 +81,15 @@ protected:
 	TArray<FVector> _outputPositions;
 	TArray<FTransform> _instanceTransforms;
 
-protected:
-	// CPU side
-	TResourceArray<FVector> positionResourceArray;
 
+protected:
 	// GPU side
 	FStructuredBufferRHIRef _positionBuffer;
 	FUnorderedAccessViewRHIRef _positionBufferUAV;     // we need a UAV for writing
+
+	FStructuredBufferRHIRef _timesBuffer;
+	FUnorderedAccessViewRHIRef _timesBufferUAV;
+
 
 	TUniquePtr< TShaderMapRef<FComputeShaderDeclaration> > _computeShader;
 	TShaderMapRef<FComputeShaderDeclaration>& computeShader()

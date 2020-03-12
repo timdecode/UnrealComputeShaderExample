@@ -31,13 +31,40 @@ void UComputeShaderBoidsComponent::BeginPlay()
 
     FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
     
-    positionResourceArray.Init(FVector::ZeroVector, numBoids);
+
+	FRandomStream rng;
+
+
+	{
+		TResourceArray<FVector> positionResourceArray;
+		positionResourceArray.Init(FVector::ZeroVector, numBoids);
+
+
+		for (FVector& position : positionResourceArray)
+		{
+			position = rng.GetUnitVector() * rng.GetFraction() * 300.0f;
+		}
+
+		FRHIResourceCreateInfo createInfo;
+		createInfo.ResourceArray = &positionResourceArray;
+
+		_positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess | BUF_ShaderResource, createInfo);
+		_positionBufferUAV = RHICreateUnorderedAccessView(_positionBuffer, false, false);
+	}
     
-	FRHIResourceCreateInfo createInfo;
-    createInfo.ResourceArray = &positionResourceArray;
-    
-    _positionBuffer = RHICreateStructuredBuffer(sizeof(FVector), sizeof(FVector) * numBoids, BUF_UnorderedAccess | BUF_ShaderResource, createInfo);
-	_positionBufferUAV = RHICreateUnorderedAccessView(_positionBuffer, false, false);
+	{
+		TResourceArray<float> timesResourceArray;
+		timesResourceArray.Init(0.0f, numBoids);
+
+		for (float& time : timesResourceArray)
+			time = rng.GetFraction();
+
+		FRHIResourceCreateInfo createInfo;
+		createInfo.ResourceArray = &timesResourceArray;
+
+		_timesBuffer = RHICreateStructuredBuffer(sizeof(float), sizeof(float) * numBoids, BUF_UnorderedAccess | BUF_ShaderResource, createInfo);
+		_timesBufferUAV = RHICreateUnorderedAccessView(_timesBuffer, false, false);
+	}
 
 	_initISMC();
 }
@@ -49,8 +76,6 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 	_outputPositions.SetNum(numBoids);
 
-	_updateInstanceTransforms();
-
 	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
 	[&](FRHICommandListImmediate& RHICommands)
 	{
@@ -58,8 +83,8 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 		FRHIComputeShader * rhiComputeShader = cs->GetComputeShader();
 
-		if (cs->positions.IsBound())
-			RHICommands.SetUAVParameter(rhiComputeShader, cs->positions.GetBaseIndex(), _positionBufferUAV);
+		RHICommands.SetUAVParameter(rhiComputeShader, cs->positions.GetBaseIndex(), _positionBufferUAV);
+		RHICommands.SetUAVParameter(rhiComputeShader, cs->times.GetBaseIndex(), _timesBufferUAV);
 
 		RHICommands.SetComputeShader(rhiComputeShader);
 
@@ -71,6 +96,8 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 
 		RHIUnlockStructuredBuffer(_positionBuffer);
 	});
+
+	_updateInstanceTransforms();
 }
 
 void UComputeShaderBoidsComponent::_initISMC()
@@ -111,7 +138,7 @@ void UComputeShaderBoidsComponent::_updateInstanceTransforms()
 		FTransform& transform = _instanceTransforms[i];
 
 		transform.SetTranslation(_outputPositions[i]);
-		transform.SetScale3D(FVector(1.0f));
+		transform.SetScale3D(FVector(0.05f));
 		transform.SetRotation(FQuat::Identity);
 	}
 
@@ -123,6 +150,7 @@ void UComputeShaderBoidsComponent::_updateInstanceTransforms()
 FComputeShaderDeclaration::FComputeShaderDeclaration(const ShaderMetaType::CompiledShaderInitializerType& Initializer) : FGlobalShader(Initializer)
 {
 	positions.Bind(Initializer.ParameterMap, TEXT("positions"));
+	times.Bind(Initializer.ParameterMap, TEXT("times"));
 }
 
 void FComputeShaderDeclaration::ModifyCompilationEnvironment(const FGlobalShaderPermutationParameters& Parameters, FShaderCompilerEnvironment& OutEnvironment)
