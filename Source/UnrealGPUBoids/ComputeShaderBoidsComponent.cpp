@@ -73,7 +73,11 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	outputPositions.SetNum(numBoids);
+	if (outputPositions.Num() != numBoids)
+	{
+		const FVector zero(0.0f);
+		outputPositions.Init(zero, numBoids);
+	}
 
 	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
 	[&](FRHICommandListImmediate& RHICommands)
