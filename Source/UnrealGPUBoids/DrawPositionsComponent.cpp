@@ -83,7 +83,5 @@ void UDrawPositionsComponent::_updateInstanceTransforms()
 	}
 
 	ismc->BatchUpdateInstancesTransforms(0, _instanceTransforms, false, true, true);
-
-	ismc->UpdateBounds();
 }
 
