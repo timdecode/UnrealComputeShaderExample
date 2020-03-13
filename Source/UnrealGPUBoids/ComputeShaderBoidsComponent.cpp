@@ -30,10 +30,8 @@ void UComputeShaderBoidsComponent::BeginPlay()
 	Super::BeginPlay();
 
     FRHICommandListImmediate& RHICommands = GRHICommandList.GetImmediateCommandList();
-    
 
 	FRandomStream rng;
-
 
 	{
 		TResourceArray<FVector> positionResourceArray;
@@ -66,6 +64,11 @@ void UComputeShaderBoidsComponent::BeginPlay()
 		_timesBufferUAV = RHICreateUnorderedAccessView(_timesBuffer, false, false);
 	}
 
+	if (outputPositions.Num() != numBoids)
+	{
+		const FVector zero(0.0f);
+		outputPositions.Init(zero, numBoids);
+	}
 }
 
 // Called every frame
@@ -73,11 +76,7 @@ void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick Tic
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (outputPositions.Num() != numBoids)
-	{
-		const FVector zero(0.0f);
-		outputPositions.Init(zero, numBoids);
-	}
+
 
 	ENQUEUE_RENDER_COMMAND(FComputeShaderRunner)(
 	[&](FRHICommandListImmediate& RHICommands)
