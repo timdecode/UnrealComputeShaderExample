@@ -43,6 +43,7 @@ void UDrawPositionsComponent::_initISMC()
 
 	ismc->SetMobility(EComponentMobility::Movable);
 	ismc->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ismc->SetCanEverAffectNavigation(false);
 	//ismc->UseDynamicInstanceBuffer = true;
 	//ismc->KeepInstanceBufferCPUAccess = true;
 	ismc->SetCollisionProfileName(TEXT("NoCollision"));
