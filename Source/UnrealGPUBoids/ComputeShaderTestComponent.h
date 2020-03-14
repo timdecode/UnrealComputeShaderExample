@@ -75,6 +75,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int numBoids = 1000;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float spawnRadius = 600.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FVector> outputPositions;
 

@@ -40,7 +40,7 @@ void UComputeShaderTestComponent::BeginPlay()
 
 		for (FVector& position : positionResourceArray)
 		{
-			position = rng.GetUnitVector() * rng.GetFraction() * 300.0f;
+			position = rng.GetUnitVector() * rng.GetFraction() * spawnRadius;
 		}
 
 		FRHIResourceCreateInfo createInfo;
