@@ -12,3 +12,7 @@ This project is a minimal example for using compute shaders in the Unreal Engine
 I couldn't figure out how to bind the compute shader to the ISMCs internal buffers. So, we are doing unnecessary copying back to the CPU and back to the GPU. I also copy from a FVector array to a FTransform array, that's a little ugly.
 
 The [compute shader](Shaders/Boid.usf) is super basic, it just modulates positions with a sine function.
+
+# Gotchas
+* The ``LoadingPhase`` in the uproject file needs to be ``PostConfigInit``
+* You must let Unreal know where to find your shader directly. I set this in the game mode in the module interface in [ComputeShaderExample.h](Source/ComputeShaderTest.h)
