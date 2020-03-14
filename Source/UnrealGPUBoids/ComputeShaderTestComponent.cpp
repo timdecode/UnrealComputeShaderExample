@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ComputeShaderBoidsComponent.h"
+#include "ComputeShaderTestComponent.h"
 
 #include "ShaderParameterUtils.h"
 #include "RHIStaticStates.h"
@@ -14,7 +14,7 @@
 
 
 // Sets default values for this component's properties
-UComputeShaderBoidsComponent::UComputeShaderBoidsComponent() 
+UComputeShaderTestComponent::UComputeShaderTestComponent() 
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -25,7 +25,7 @@ UComputeShaderBoidsComponent::UComputeShaderBoidsComponent()
 
 
 // Called when the game starts
-void UComputeShaderBoidsComponent::BeginPlay()
+void UComputeShaderTestComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -72,7 +72,7 @@ void UComputeShaderBoidsComponent::BeginPlay()
 }
 
 // Called every frame
-void UComputeShaderBoidsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UComputeShaderTestComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 

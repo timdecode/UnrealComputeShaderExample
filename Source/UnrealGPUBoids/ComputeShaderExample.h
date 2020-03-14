@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-class FGPUBoids : public IModuleInterface
+class FComputeShaderExample : public IModuleInterface
 {
 	virtual bool IsGameModule() const override
 	{

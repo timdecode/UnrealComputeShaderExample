@@ -3,9 +3,9 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class UnrealGPUBoidsTarget : TargetRules
+public class ComputeShaderExampleTarget : TargetRules
 {
-	public UnrealGPUBoidsTarget(TargetInfo Target) : base(Target)
+	public ComputeShaderExampleTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;

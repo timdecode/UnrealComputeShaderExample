@@ -3,7 +3,7 @@
 
 #include "DrawPositionsComponent.h"
 
-#include "ComputeShaderBoidsComponent.h"
+#include "ComputeShaderTestComponent.h"
 
 // Sets default values for this component's properties
 UDrawPositionsComponent::UDrawPositionsComponent()
@@ -55,7 +55,7 @@ void UDrawPositionsComponent::_updateInstanceTransforms()
 
 	if (!ismc) return;
 
-	UComputeShaderBoidsComponent * boidsComponent = GetOwner()->FindComponentByClass<UComputeShaderBoidsComponent>();
+	UComputeShaderTestComponent * boidsComponent = GetOwner()->FindComponentByClass<UComputeShaderTestComponent>();
 
 	if (!boidsComponent) return;
 

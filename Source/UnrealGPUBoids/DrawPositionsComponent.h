@@ -8,7 +8,7 @@
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UNREALGPUBOIDS_API UDrawPositionsComponent : public UActorComponent
+class COMPUTESHADEREXAMPLE_API UDrawPositionsComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

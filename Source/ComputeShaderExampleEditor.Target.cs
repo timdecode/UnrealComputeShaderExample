@@ -3,13 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class UnrealGPUBoidsEditorTarget : TargetRules
+public class ComputeShaderExampleEditorTarget : TargetRules
 {
-	public UnrealGPUBoidsEditorTarget(TargetInfo Target) : base(Target)
+	public ComputeShaderExampleEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 
-		ExtraModuleNames.AddRange( new string[] { "UnrealGPUBoids" } );
+		ExtraModuleNames.AddRange( new string[] { "ComputeShaderExample" } );
 	}
 }

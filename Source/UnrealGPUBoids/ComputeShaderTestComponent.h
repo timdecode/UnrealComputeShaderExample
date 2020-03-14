@@ -11,7 +11,7 @@
 
 #include <atomic>
 
-#include "ComputeShaderBoidsComponent.generated.h"
+#include "ComputeShaderTestComponent.generated.h"
 
 
 
@@ -53,13 +53,13 @@ public:
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UNREALGPUBOIDS_API UComputeShaderBoidsComponent : public UActorComponent
+class COMPUTESHADEREXAMPLE_API UComputeShaderTestComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UComputeShaderBoidsComponent();
+	UComputeShaderTestComponent();
 
 protected:
 	// Called when the game starts
