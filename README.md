@@ -1,6 +1,6 @@
 # UnrealGPUBoids
  
-This project is a minimal example for using compute shaders in the Unreal Engine.
+This project is a minimal example for using compute shaders in the Unreal Engine. The other examples out there are overly complicated for someone getting started, in my opinion.
 
 ``FComputeShaderDeclaration`` in [ComputeShaderTestComponent.h](Source/ComputeShaderExample/ComputeShaderTestComponent.h) is how we bind our buffers from our Unreal classes to the compute shader. You write one of these for each of your compute shaders. 
 
