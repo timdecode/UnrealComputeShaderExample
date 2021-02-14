@@ -3,7 +3,16 @@
 
 #include "ComputeShaderTestComponent.h"
 
+#if ENGINE_MINOR_VERSION < 26
+
 #include "ShaderParameterUtils.h"
+
+#else
+
+#include "ShaderCompilerCore.h"
+
+#endif
+
 #include "RHIStaticStates.h"
 
 // Some useful links
@@ -94,6 +103,7 @@ void UComputeShaderTestComponent::TickComponent(float DeltaTime, ELevelTick Tick
 		RHICommands.SetUAVParameter(rhiComputeShader, cs->times.GetBaseIndex(), _timesBufferUAV);
 
 		RHICommands.SetComputeShader(rhiComputeShader);
+
 #if ENGINE_MINOR_VERSION < 25
 
 		DispatchComputeShader(RHICommands, *cs, 256, 1, 1);
