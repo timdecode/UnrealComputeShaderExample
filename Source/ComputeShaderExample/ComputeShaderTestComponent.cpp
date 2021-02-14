@@ -83,14 +83,23 @@ void UComputeShaderTestComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	{
 		TShaderMapRef<FComputeShaderDeclaration> cs(GetGlobalShaderMap(ERHIFeatureLevel::SM5));
 
+#if ENGINE_MINOR_VERSION < 25
+
 		FRHIComputeShader * rhiComputeShader = cs->GetComputeShader();
+#else
+		FRHIComputeShader* rhiComputeShader = cs.GetComputeShader();
+#endif
 
 		RHICommands.SetUAVParameter(rhiComputeShader, cs->positions.GetBaseIndex(), _positionBufferUAV);
 		RHICommands.SetUAVParameter(rhiComputeShader, cs->times.GetBaseIndex(), _timesBufferUAV);
 
 		RHICommands.SetComputeShader(rhiComputeShader);
+#if ENGINE_MINOR_VERSION < 25
 
 		DispatchComputeShader(RHICommands, *cs, 256, 1, 1);
+#else
+		DispatchComputeShader(RHICommands, cs, 256, 1, 1);
+#endif
 
 		// read back the data
 		uint8* data = (uint8*)RHILockStructuredBuffer(_positionBuffer, 0, numBoids * sizeof(FVector), RLM_ReadOnly);
