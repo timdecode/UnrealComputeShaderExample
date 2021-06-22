@@ -37,6 +37,8 @@ class FComputeShaderDeclaration : public FGlobalShader
 
 	static void ModifyCompilationEnvironment(const FGlobalShaderPermutationParameters& Parameters, FShaderCompilerEnvironment& OutEnvironment);
 
+#if ENGINE_MINOR_VERSION < 25
+
 	virtual bool Serialize(FArchive& Ar) override
 	{
 		bool bShaderHasOutdatedParams = FGlobalShader::Serialize(Ar);
@@ -46,10 +48,22 @@ class FComputeShaderDeclaration : public FGlobalShader
 
 		return bShaderHasOutdatedParams;
 	}
+	
+#else
+
+#endif
 
 public:
+
+#if ENGINE_MINOR_VERSION < 25
+
 	FShaderResourceParameter positions;
 	FShaderResourceParameter times;
+
+#else
+	LAYOUT_FIELD(FShaderResourceParameter, positions);
+	LAYOUT_FIELD(FShaderResourceParameter, times);
+#endif
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
