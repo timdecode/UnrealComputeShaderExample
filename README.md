@@ -1,8 +1,6 @@
-# UnrealGPUBoids
- 
-This project is a minimal example for using compute shaders in the Unreal Engine. The other examples out there are overly complicated for someone getting started, in my opinion.
+ This project is a minimal example for using compute shaders in the Unreal Engine. 
 
-``FComputeShaderDeclaration`` in [ComputeShaderTestComponent.h](Source/ComputeShaderExample/ComputeShaderTestComponent.h) is how we bind our buffers from our Unreal classes to the compute shader. You write one of these for each of your compute shaders. 
+The main thing to implement is a way to pass/bind our GPU buffers to the compute shader. We do this by subclassing a FGlobalShader, in our example our subclass is named ``FComputeShaderDeclaration``. ``FComputeShaderDeclaration`` in [ComputeShaderTestComponent.h](Source/ComputeShaderExample/ComputeShaderTestComponent.h) is how we bind our buffers from our Unreal classes to the compute shader. You write one of these for each of your compute shaders. 
 
 
 ``UComputeShaderTestComponent`` in [ComputeShaderTestComponent.h](Source/ComputeShaderExample/ComputeShaderTestComponent.h) contains the structured-buffer and unordered-access-views (UAVs) that we bind to the compute shader. We setup and bind to our compute shader in TickComponent, on the render command queue.
